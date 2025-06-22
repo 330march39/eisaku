@@ -9,43 +9,53 @@
     <!-- Inter Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        html, body { /* Added html height for proper vh calculation */
+        html, body {
             height: 100%;
         }
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #F7F7F7; /* ベースの背景色をF7F7F7に設定 */
-            display: flex; /* Flexboxを適用 */
-            flex-direction: column; /* 子要素を縦に並べる */
-            min-height: 100vh; /* 少なくともビューポートの高さ全体を占める */
-            padding: 15px; /* 全体的なパディングを調整し、文字を読みやすく */
+            background-color: #F7F7F7;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 15px;
             box-sizing: border-box;
-            font-size: 0.9rem; /* 全体の基本フォントサイズを調整 */
+            font-size: 0.9rem;
         }
         .container {
             background-color: #ffffff;
-            padding: 30px; /* パディングを調整 */
+            padding: 30px;
             border-radius: 20px;
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1); /* 影を調整 */
-            max-width: 900px; /* 最大幅を調整 */
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
             width: 100%;
             margin-top: 20px;
             border: 1px solid #e0e0e0;
-            flex-grow: 1; /* 利用可能なスペースを埋めるように成長 */
+            flex-grow: 1;
         }
-        .header-section { /* Added for h1 and info button positioning */
+        .header-section {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            position: relative; /* For absolute positioning of info button */
+            position: relative;
             margin-bottom: 24px;
         }
-        h1 {
-            font-size: 2.2rem; /* タイトルを調整 */
+        .main-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #333333;
+            margin-bottom: 4px;
             text-align: center;
-            flex-grow: 1; /* Allow h1 to take available space */
         }
-        .info-button { /* Info icon button style */
+        .sub-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #666666;
+            text-align: center;
+            margin-bottom: 0;
+        }
+        .info-button {
             position: absolute;
             right: 0;
             top: 50%;
@@ -62,7 +72,7 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             transition: all 0.2s ease;
             flex-shrink: 0;
-            margin-left: 10px; /* Space from title */
+            margin-left: 10px;
         }
         .info-button:hover {
             background-color: #D8E6FF;
@@ -76,15 +86,15 @@
         }
 
         p {
-            font-size: 0.9rem; /* 一般の段落のフォントサイズを調整 */
+            font-size: 0.9rem;
         }
         textarea {
             width: 100%;
-            height: 220px; /* 高さを調整 */
-            padding: 15px; /* パディングを調整 */
+            height: 220px;
+            padding: 15px;
             border: 2px solid #D1DBE5;
             border-radius: 15px;
-            font-size: 0.95rem; /* テキストエリアのフォントサイズを調整 */
+            font-size: 0.95rem;
             resize: vertical;
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
             outline: none;
@@ -95,27 +105,26 @@
             border-color: #5B86E5;
             box-shadow: 0 0 0 4px rgba(91, 134, 229, 0.3);
         }
-        /* AI添削するボタンのスタイル */
         button#gradeButton {
             background: linear-gradient(135deg, #5B86E5 0%, #4169E1 100%);
             color: #ffffff;
-            padding: 16px 35px; /* ボタンのサイズを調整 */
-            border-radius: 20px; /* 角を調整 */
-            font-size: 1.4rem; /* フォントサイズを調整 */
+            padding: 16px 35px;
+            border-radius: 20px;
+            font-size: 1.4rem;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
             outline: none;
             border: none;
-            box-shadow: 0 8px 20px rgba(91, 134, 229, 0.5); /* 影を調整 */
-            letter-spacing: 0.04em; /* 文字間隔を調整 */
+            box-shadow: 0 8px 20px rgba(91, 134, 229, 0.5);
+            letter-spacing: 0.04em;
             position: relative;
             overflow: hidden;
             z-index: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px; /* アイコンとテキストの間隔を調整 */
+            gap: 10px;
         }
         button#gradeButton::before {
             content: '';
@@ -132,7 +141,7 @@
             left: 100%;
         }
         button#gradeButton:hover {
-            transform: translateY(-6px) scale(1.01); /* リフトアップと拡大を調整 */
+            transform: translateY(-6px) scale(1.01);
             box-shadow: 0 12px 30px rgba(65, 105, 225, 0.7);
         }
         button#gradeButton:active {
@@ -141,17 +150,16 @@
             background: linear-gradient(135deg, #4169E1 0%, #5B86E5 100%);
         }
         button#gradeButton svg {
-            width: 25px; /* アイコンサイズを調整 */
+            width: 25px;
             height: 25px;
         }
 
-        /* 詳細設定ボタンのスタイル */
         button#settingsButton {
-            background-color: #A0D0F5; /* 明るい青色 */
-            color: #2C5282; /* 濃い青色の文字 */
-            padding: 8px 18px; /* パディングを調整 */
-            border-radius: 12px; /* 角を調整 */
-            font-size: 0.85rem; /* フォントサイズを調整 */
+            background-color: #A0D0F5;
+            color: #2C5282;
+            padding: 8px 18px;
+            border-radius: 12px;
+            font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -161,7 +169,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px; /* アイコンとテキストの間隔を調整 */
+            gap: 6px;
         }
         button#settingsButton:hover {
             background-color: #8BC9F0;
@@ -173,35 +181,120 @@
             box-shadow: 0 2px 6px rgba(160, 208, 245, 0.3);
         }
         button#settingsButton svg {
-            width: 18px; /* アイコンサイズを調整 */
+            width: 18px;
             height: 18px;
         }
 
-        /* 区切り線スタイル */
         .separator {
             border-top: 1px solid #e0e0e0;
             margin: 30px 0;
             opacity: 0.7;
         }
 
-        /* Grades display layout */
+        .grade-scale-visual-container {
+            border: 1px solid #C4DAFC;
+            border-radius: 12px;
+            padding: 15px 10px;
+            background-color: #E6F0FF;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 400px; /* Further reduced width */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .grade-scale-visual {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        .grade-scale-visual .scale-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4A5568;
+            font-size: 0.95rem;
+            position: relative;
+            padding: 0 5px;
+        }
+        .grade-scale-visual .scale-header .label {
+            font-size: 1.1em;
+            z-index: 1;
+            background-color: #E6F0FF;
+            padding: 0 5px;
+        }
+        .grade-scale-visual .scale-header .arrow-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #5B86E5;
+            transform: translateY(-50%);
+            z-index: 0;
+        }
+        /* Removed ::before and ::after for simple line */
+        .grade-scale-visual .scale-header .arrow {
+            display: none;
+        }
+
+        .grade-scale-visual .grade-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Space out items evenly */
+            width: 100%;
+            padding: 5px 0;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .grade-scale-visual .grade-row::-webkit-scrollbar {
+            display: none;
+        }
+
+        .grade-scale-visual span.grade-box {
+            padding: 2px 6px;
+            border-radius: 6px;
+            background-color: #FFFFFF;
+            border: 1px solid #C4DAFC;
+            flex-shrink: 0;
+            font-size: 0.9em;
+            color: #333333;
+            margin: 0; /* No margin between grade boxes */
+            flex-grow: 1; /* Allow boxes to grow to fill space */
+            text-align: center; /* Center text in box */
+        }
+        .grade-scale-visual .arrow {
+            display: none;
+        }
+
+
         .overall-grade-container {
             display: flex;
             justify-content: center;
-            margin-bottom: 20px; /* 間隔を調整 */
+            margin-bottom: 20px;
         }
         .detailed-grades-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* 最小幅を調整 */
-            gap: 12px; /* 間隔を調整 */
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 12px;
             margin-bottom: 30px;
         }
         .grade-item {
             background: linear-gradient(135deg, #E6F0FF 0%, #D8E6FF 100%);
-            padding: 15px 10px; /* パディングを調整 */
-            border-radius: 12px; /* 角を調整 */
+            padding: 15px 10px;
+            border-radius: 12px;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06); /* 影を調整 */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -229,25 +322,24 @@
             transform: scale(2);
         }
         .grade-item:hover {
-            transform: translateY(-3px); /* リフトアップを調整 */
+            transform: translateY(-3px);
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.09);
         }
         .grade-label {
-            font-size: 0.8rem; /* フォントサイズを調整 */
+            font-size: 0.8rem;
             color: #4A5568;
             margin-bottom: 3px;
             font-weight: 600;
         }
         .grade-value {
-            font-size: 2rem; /* フォントサイズを調整 */
+            font-size: 2rem;
             font-weight: 800;
             color: #333333;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
         }
-        /* Specific style for Overall grade item */
         .overall-grade-item {
-            min-width: 180px; /* 総合評価のアイテムの最小幅を調整 */
-            padding: 20px 15px; /* パディングを調整 */
+            min-width: 180px;
+            padding: 20px 15px;
             background: linear-gradient(135deg, #5B86E5 0%, #4169E1 100%);
             color: #ffffff;
             box-shadow: 0 7px 20px rgba(91, 134, 229, 0.4);
@@ -256,29 +348,29 @@
             color: #e0e0e0;
         }
         .overall-grade-item .grade-value {
-            font-size: 2.5rem; /* 総合評価のフォントサイズを調整 */
+            font-size: 2.5rem;
             color: #ffffff;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
         }
 
         .feedback-section {
             background-color: #ffffff;
-            padding: 20px; /* パディングを調整 */
-            border-radius: 15px; /* 角を調整 */
+            padding: 20px;
+            border-radius: 15px;
             margin-bottom: 18px;
             border: 1px solid #e0e0e0;
-            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.05); /* 影を調整 */
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease-in-out;
         }
         .feedback-section:hover {
              box-shadow: 0 7px 18px rgba(0, 0, 0, 0.08);
         }
         .feedback-section h3 {
-            font-size: 1.15rem; /* 見出しのフォントサイズを調整 */
+            font-size: 1.15rem;
             font-weight: 700;
             color: #333333;
             margin-bottom: 10px;
-            border-bottom: 1px solid #E6F0FF; /* 境界線を調整 */
+            border-bottom: 1px solid #E6F0FF;
             padding-bottom: 6px;
             display: flex;
             align-items: center;
@@ -286,10 +378,10 @@
         .feedback-section h3 svg {
             margin-right: 8px;
             color: #5B86E5;
-            width: 20px; /* アイコンサイズを調整 */
+            width: 20px;
             height: 20px;
         }
-        .feedback-section .section-grade { /* Style for small grade next to feedback title */
+        .feedback-section .section-grade {
             font-size: 0.9rem;
             font-weight: 700;
             color: #5B86E5;
@@ -300,23 +392,21 @@
             border: 1px solid #C4DAFC;
         }
         .feedback-section p {
-            font-size: 0.9rem; /* 段落のフォントサイズを調整 */
+            font-size: 0.9rem;
             line-height: 1.6;
             color: #4A5568;
             white-space: pre-wrap;
             word-wrap: break-word;
             margin-bottom: 0.6em;
         }
-        /* Removed colon from strong tags */
         .feedback-section p strong {
-            margin-left: 0.5em; /* 箇条書きの「・」の後のスペース */
+            margin-left: 0.5em;
         }
-        /* Grammar specific feedback table-like styling */
         .grammar-feedback-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
-            margin-bottom: 15px; /* 表の下に余白を追加 */
+            margin-bottom: 15px;
         }
         .grammar-feedback-table th, .grammar-feedback-table td {
             padding: 8px 12px;
@@ -330,25 +420,25 @@
             color: #4A5568;
             font-weight: 600;
             white-space: nowrap;
-            width: 25%; /* Adjust column width */
+            width: 25%;
         }
         .grammar-feedback-table td {
             background-color: #FFFFFF;
             color: #333333;
         }
         .grammar-feedback-table ul {
-            list-style: none; /* Remove default bullet */
+            list-style: none;
             padding-left: 0;
             margin-bottom: 0;
         }
         .grammar-feedback-table li {
             position: relative;
-            padding-left: 15px; /* Space for custom bullet */
+            padding-left: 15px;
             margin-bottom: 5px;
         }
         .grammar-feedback-table li::before {
-            content: '•'; /* Custom bullet point */
-            color: #5B86E5; /* Blue bullet */
+            content: '•';
+            color: #5B86E5;
             position: absolute;
             left: 0;
             top: 0;
@@ -358,7 +448,6 @@
         }
 
 
-        /* Animations */
         @keyframes fadeInScale {
             from {
                 opacity: 0;
@@ -423,7 +512,6 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
         }
 
-        /* Modal specific styles */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -440,23 +528,29 @@
         }
         .modal-content {
             background-color: #ffffff;
-            padding: 20px; /* モーダルのパディングを調整 */
+            padding: 20px;
             border-radius: 15px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            max-width: 500px; /* モーダルの最大幅を調整 */
+            max-width: 500px;
             width: 90%;
+            height: auto;
+            max-height: 95vh; /* Max height for content to fit mobile screens */
+            overflow-y: auto; /* Enable scroll if content overflows */
             text-align: center;
             position: relative;
             animation: fadeInScale 0.4s ease-out forwards;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         .modal-content h2 {
-            font-size: 1.4rem; /* モーダルタイトルのフォントサイズを調整 */
+            font-size: 1.4rem;
             font-weight: 700;
             color: #333333;
             margin-bottom: 15px;
         }
         .modal-content p {
-            font-size: 0.85rem; /* モーダル本文のフォントサイズを調整 */
+            font-size: 0.85rem;
             color: #4A5568;
             line-height: 1.5;
             margin-bottom: 15px;
@@ -465,28 +559,28 @@
             background-color: #f7f7f7;
             border: 1px solid #e0e0e0;
             border-radius: 8px;
-            padding: 10px; /* 利用規約ボックスのパディングを調整 */
-            max-height: 150px; /* 高さを調整 */
+            padding: 10px;
+            max-height: 180px; /* Adjusted height for mobile to leave space for button */
             overflow-y: auto;
             text-align: left;
-            font-size: 0.8rem; /* 利用規約のフォントサイズを調整 */
+            font-size: 0.8rem;
             color: #666666;
             line-height: 1.4;
             margin-bottom: 18px;
         }
-        /* モーダル内の同意ボタンのスタイル */
         .modal-button {
             background: linear-gradient(135deg, #5B86E5 0%, #4169E1 100%);
             color: #ffffff;
-            padding: 12px 30px; /* モーダルボタンのサイズを調整 */
+            padding: 12px 30px;
             border-radius: 10px;
-            font-size: 1rem; /* フォントサイズを調整 */
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             outline: none;
             border: none;
             box-shadow: 0 5px 15px rgba(91, 134, 229, 0.4);
+            margin-top: auto;
         }
         .modal-button:hover {
             transform: translateY(-3px);
@@ -497,19 +591,22 @@
             box-shadow: 0 3px 10px rgba(91, 134, 229, 0.3);
         }
 
-        /* Settings Modal specific styles */
         .settings-modal-content {
             background-color: #ffffff;
-            padding: 25px; /* 設定モーダルのパディングを調整 */
+            padding: 25px;
             border-radius: 18px;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-            max-width: 650px; /* 設定モーダルの最大幅を調整 */
+            max-width: 650px;
             width: 90%;
-            max-height: 90vh; /* 画面に収まるように高さを制限 */
-            overflow-y: auto; /* 必要に応じてスクロール可能にする */
+            height: auto;
+            max-height: 95vh; /* Ensure modal fits without scrolling overall window */
+            overflow-y: auto; /* Allow internal scrolling if content is too tall */
             text-align: left;
             position: relative;
             animation: fadeInScale 0.4s ease-out forwards;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         .settings-modal-content h2 {
             font-size: 1.6rem;
@@ -519,7 +616,7 @@
             text-align: center;
         }
         .settings-section {
-            margin-bottom: 25px; /* 間隔を調整*/
+            margin-bottom: 25px;
             padding-bottom: 15px;
             border-bottom: 1px solid #e0e0e0;
         }
@@ -529,7 +626,7 @@
             padding-bottom: 0;
         }
         .settings-section h3 {
-            font-size: 1.2rem; /* 見出しのフォントサイズを調整 */
+            font-size: 1.2rem;
             font-weight: 600;
             color: #5B86E5;
             margin-bottom: 12px;
@@ -540,12 +637,12 @@
         .checkbox-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px; /* 間隔を調整 */
+            gap: 12px;
         }
         .checkbox-item {
             display: flex;
             align-items: center;
-            font-size: 0.9rem; /* フォントサイズを調整 */
+            font-size: 0.9rem;
             color: #4A5568;
             cursor: pointer;
             transition: color 0.2s ease;
@@ -554,10 +651,10 @@
             color: #5B86E5;
         }
         .checkbox-item input[type="checkbox"] {
-            margin-right: 6px; /* 間隔を調整 */
-            width: 18px; /* サイズを調整 */
+            margin-right: 6px;
+            width: 18px;
             height: 18px;
-            border: 1px solid #5B86E5; /* 境界線を調整 */
+            border: 1px solid #5B86E5;
             border-radius: 5px;
             flex-shrink: 0;
         }
@@ -570,7 +667,7 @@
             position: absolute;
             left: 50%;
             top: 50%;
-            width: 5px; /* チェックマークサイズを調整 */
+            width: 5px;
             height: 10px;
             border: solid white;
             border-width: 0 1.5px 1.5px 0;
@@ -578,25 +675,25 @@
         }
         .settings-textarea {
             width: 100%;
-            height: 100px; /* 高さを調整 */
-            padding: 10px; /* パディングを調整 */
+            height: 100px;
+            padding: 10px;
             border: 1px solid #D1DBE5;
             border-radius: 8px;
-            font-size: 0.9rem; /* フォントサイズを調整 */
+            font-size: 0.9rem;
             resize: vertical;
         }
         .quick-prompt-buttons {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px; /* 間隔を調整 */
+            gap: 8px;
             margin-top: 12px;
         }
         .quick-prompt-button {
             background-color: #E6F0FF;
             color: #4169E1;
-            padding: 6px 12px; /* パディングを調整 */
+            padding: 6px 12px;
             border-radius: 8px;
-            font-size: 0.8rem; /* フォントサイズを調整 */
+            font-size: 0.8rem;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -612,15 +709,16 @@
         .settings-actions {
             display: flex;
             justify-content: flex-end;
-            gap: 12px; /* 間隔を調整 */
+            gap: 12px;
             margin-top: 25px;
+            flex-shrink: 0;
         }
         .settings-apply-button {
             background: linear-gradient(135deg, #5B86E5 0%, #4169E1 100%);
             color: #ffffff;
-            padding: 8px 20px; /* パディングを調整 */
+            padding: 8px 20px;
             border-radius: 10px;
-            font-size: 0.95rem; /* フォントサイズを調整 */
+            font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -639,9 +737,9 @@
         .settings-cancel-button {
             background-color: #CBD5E1;
             color: #4A5568;
-            padding: 8px 20px; /* パディングを調整 */
+            padding: 8px 20px;
             border-radius: 10px;
-            font-size: 0.95rem; /* フォントサイズを調整 */
+            font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -659,17 +757,17 @@
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
         }
 
-        /* Footer styles */
-        footer.footer { /* Updated selector to target footer tag */
+        footer.footer {
             text-align: center;
-            margin-top: 40px; /* Adjust as needed for spacing from content */
+            margin-top: 40px;
             padding-top: 20px;
             border-top: 1px solid #e0e0e0;
             color: #666;
             font-size: 0.8rem;
-            flex-shrink: 0; /* フッターが縮まないようにする */
+            flex-shrink: 0;
+            padding-bottom: 10px;
         }
-        footer.footer p { /* Updated selector for p inside footer */
+        footer.footer p {
             margin-bottom: 5px;
         }
 
@@ -685,8 +783,11 @@
             .header-section {
                 margin-bottom: 20px;
             }
-            h1 {
+            .main-title {
                 font-size: 1.8rem;
+            }
+            .sub-title {
+                font-size: 1rem;
             }
             .info-button {
                 width: 30px;
@@ -736,9 +837,34 @@
             .separator {
                 margin: 20px 0;
             }
+            .grade-scale-visual-container {
+                padding: 10px 5px;
+                margin-bottom: 20px;
+                max-width: 100%;
+            }
+            .grade-scale-visual {
+                font-size: 0.85rem;
+            }
+            .grade-scale-visual .scale-header {
+                max-width: 100%;
+                font-size: 0.9em;
+            }
+            .grade-scale-visual .grade-row {
+                max-width: 100%;
+                justify-content: space-between; /* Ensures grades are spread out */
+                padding: 5px 0;
+            }
+            .grade-scale-visual span.grade-box {
+                padding: 1px 4px;
+                font-size: 0.85em;
+                margin: 0; /* No margin between grade boxes to pack them */
+            }
+            .grade-scale-visual .arrow {
+                font-size: 1rem;
+            }
             .overall-grade-item {
                 min-width: unset;
-                width: 80%; /* モバイルで適切に表示されるよう調整 */
+                width: 80%;
                 max-width: 220px;
                 padding: 15px 12px;
                 margin-left: auto;
@@ -748,7 +874,7 @@
                 font-size: 2.2rem;
             }
             .detailed-grades-grid {
-                grid-template-columns: 1fr; /* モバイルでは1列にする */
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Adjusted to 2 columns on tablet */
                 gap: 10px;
                 margin-bottom: 25px;
             }
@@ -784,12 +910,12 @@
                 font-size: 0.75rem;
             }
             .grammar-feedback-table th {
-                width: 30%; /* Adjust column width for mobile */
+                width: 30%;
             }
             .modal-content, .settings-modal-content {
                 padding: 15px;
                 width: 95%;
-                max-height: 90vh; /* Adjust for smaller screens */
+                max-height: 95vh;
             }
             .modal-content h2, .settings-modal-content h2 {
                 font-size: 1.2rem;
@@ -798,8 +924,8 @@
                 font-size: 0.75rem;
             }
             .terms-box {
-                max-height: 100px;
-                font-size: 0.7rem;
+                max-height: 250px;
+                font-size: 0.75rem;
             }
             .modal-button, .settings-apply-button, .settings-cancel-button {
                 font-size: 0.9rem;
@@ -818,20 +944,23 @@
             .quick-prompt-buttons {
                 gap: 6px;
             }
-            footer.footer { /* Updated selector for mobile footer */
+            footer.footer {
                 padding-top: 15px;
             }
         }
         @media (max-width: 480px) {
             .detailed-grades-grid {
-                grid-template-columns: 1fr; /* 1列にする */
+                grid-template-columns: 1fr; /* On very small screens, revert to 1 column */
             }
             .overall-grade-item {
-                width: 90%; /* さらに幅を広げる */
+                width: 90%;
             }
             .checkbox-group {
-                flex-direction: column; /* チェックボックスを縦に並べる */
+                flex-direction: column;
                 align-items: flex-start;
+            }
+            .terms-box {
+                max-height: 300px;
             }
         }
     </style>
@@ -839,7 +968,10 @@
 <body class="antialiased">
     <div class="container">
         <div class="header-section">
-            <h1 class="text-3xl font-bold text-gray-800">英作くん - AI英文添削サービス</h1>
+            <div>
+                <h1 class="main-title">英作くん</h1>
+                <p class="sub-title">AI英文添削サービス</p>
+            </div>
             <button id="headerInfoButton" class="info-button">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -874,6 +1006,26 @@
 
         <div id="results" class="hidden">
             <h2 class="text-2xl font-semibold text-gray-700 mb-5 text-center">添削結果</h2>
+
+            <!-- Grade Scale Visual (moved and updated) -->
+            <div class="grade-scale-visual-container">
+                <div class="grade-scale-visual">
+                    <div class="scale-header">
+                        <span class="label">GOOD</span>
+                        <span class="arrow-line"></span> <!-- Line for arrow -->
+                        <span class="label">BAD</span>
+                    </div>
+                    <div class="grade-row">
+                        <span class="grade-box">A+</span>
+                        <span class="grade-box">A</span>
+                        <span class="grade-box">B</span>
+                        <span class="grade-box">C</span>
+                        <span class="grade-box">D</span>
+                        <span class="grade-box">E</span>
+                        <span class="grade-box">F</span>
+                    </div>
+                </div>
+            </div>
 
             <!-- Overall Grade Display -->
             <div class="overall-grade-container" id="overallGradeArea">
@@ -913,8 +1065,11 @@
     <div id="disclaimerModal" class="modal-overlay hidden">
         <div class="modal-content">
             <h2>ご利用にあたっての注意事項</h2>
-            <p>このサービスはAI（人工知能）を利用して英文添削を行っています。AIによる添削結果には、誤った情報が含まれる可能性があり、その正確性を保証するものではありません。</p>
-            <p>添削結果はあくまで参考としてご利用ください。当サービスのご利用により生じたいかなる損害についても、当方は一切の責任を負いません。</p>
+            <p>このサービスはAI（人工知能）を利用して英文添削を行っています。</p>
+            <p>Google社のGemini APIを利用しています。</p>
+            <p>AIによる添削結果には、誤った情報が含まれる可能性があり、その正確性を保証するものではありません。</p>
+            <p>当サービスのご利用により生じた、いかなる損害についても、当方は一切の責任を負いません。</p>
+            <p>添削結果はあくまで参考としてご利用ください。</p>
 
             <div class="terms-box">
                 <h3>利用規約</h3>
@@ -926,7 +1081,7 @@
                     <strong>第2条（免責事項）</strong><br>
                     1. 本サービスが提供するAI添削結果は、入力された英文に基づきAIが生成したものであり、その内容の正確性、完全性、信頼性、有用性、特定の目的への適合性について、いかなる保証も行いません。<br>
                     2. AIの特性上、添削結果に誤り、不適切な表現、またはユーザーの意図と異なる内容が含まれる可能性があります。ユーザーはこれを理解し、自身の判断と責任において本サービスを利用するものとします。<br>
-                    3. 本サービスのご利用によって生じたいかなる損害（直接的、間接的、偶発的、結果的損害、または逸失利益を含むがこれに限らない）についても、当方は一切の責任を負いません。ユーザーは、本サービスを利用したことにより第三者との間で紛争が生じた場合、自己の責任と費用においてこれを解決するものとします。<br>
+                    3. 本サービスのご利用により生じた、いかなる損害についても、当方は一切の責任を負いません。ユーザーは、本サービスを利用したことにより第三者との間で紛争が生じた場合、自己の責任と費用においてこれを解決するものとします。<br>
                     4. 本サービスは、システムの障害、通信環境の悪化、メンテナンス等により、事前の通知なく一時的に中断または停止されることがあります。これによりユーザーに生じた損害についても、当方は責任を負いません。
                 </p>
                 <p>
@@ -1016,7 +1171,7 @@
             const essayInput = document.getElementById('essayInput');
             const gradeButton = document.getElementById('gradeButton');
             const settingsButton = document.getElementById('settingsButton');
-            const headerInfoButton = document.getElementById('headerInfoButton'); // New: Header info button
+            const headerInfoButton = document.getElementById('headerInfoButton');
             const resultsDiv = document.getElementById('results');
             const overallGradeArea = document.getElementById('overallGradeArea');
             const detailedGradeArea = document.getElementById('detailedGradeArea');
@@ -1066,7 +1221,6 @@
                 disclaimerModal.classList.add('hidden');
             });
 
-            // New: Event listener for the header info button
             headerInfoButton.addEventListener('click', () => {
                 disclaimerModal.classList.remove('hidden');
             });
@@ -1092,51 +1246,44 @@
                 `;
             }
 
-            // Function to generate a feedback section HTML
             function createFeedbackSection(id, title, grade, good_points, improvements, mistakes, suggestions, grammarMistakeDetails = null) {
                 let content = '';
 
-                // Added grade display next to title
                 const gradeDisplay = grade ? `<span class="section-grade">${grade}</span>` : '';
 
-                content += `<p>・<strong>良かった点</strong><br>${good_points}</p>`;
+                if (good_points && good_points.trim() !== '') {
+                    content += `<p>・<strong>良かった点</strong><br>${good_points}</p>`;
+                }
 
-                // Grammar section specific display
                 if (title === '文法' && grammarMistakeDetails && grammarMistakeDetails.length > 0) {
                     content += `<p>・<strong>間違っている点と改善例</strong></p>`;
                     content += `<table class="grammar-feedback-table">`;
-                    // Changed column order here: 間違っている点, 改善例, 理由
                     content += `<thead><tr><th>間違っている点</th><th>改善例</th><th>理由</th></tr></thead>`;
                     content += `<tbody>`;
                     grammarMistakeDetails.forEach(detail => {
                         content += `<tr><td><ul><li>${detail.error}</li></ul></td><td><ul><li>${detail.correction_example}</li></ul></td><td><ul><li>${detail.reason}</li></ul></td></tr>`;
                     });
                     content += `</tbody></table>`;
-                    // Add a blank line/space after the table
                     content += `<div style="height: 15px;"></div>`;
                 } else {
-                    // General display for other sections or if grammar details are missing
                     const trimmedImprovements = improvements ? improvements.trim() : '';
                     const trimmedMistakes = mistakes ? mistakes.trim() : '';
 
-                    // Removed colon from "間違っている点"
                     if (trimmedMistakes !== '') {
                         content += `<p>・<strong>間違っている点</strong><br>${trimmedMistakes}</p>`;
                     }
 
-                    // Removed colon from "改善すべき点"
                     if (trimmedImprovements !== '' && trimmedImprovements !== trimmedMistakes) {
                         content += `<p>・<strong>改善すべき点</strong><br>${trimmedImprovements}</p>`;
                     }
                 }
                 
-                // Changed "suggestions" label to "あなたへのアドバイス" and removed colon
                 if (suggestions && suggestions.trim() !== '') {
                     content += `<p>・<strong>あなたへのアドバイス</strong><br>${suggestions}</p>`;
                 }
 
                 if (content.trim() === '') {
-                    return ''; // Don't show empty sections
+                    return '';
                 }
 
                 const iconSvg = `
@@ -1212,20 +1359,17 @@
                 feedbackArea.innerHTML = '';
 
                 try {
-                    // Build the grading instructions based on enabled items
                     let gradingInstructions = "以下の英文を添削し、詳細な評価とフィードバックを提供してください。\n";
-                    gradingInstructions += "評価は以下の項目についてA+, A, B, C, D, E, Fのいずれかで採点し、その後に各評価項目（文法、語彙、構成、内容、スペル・表記、総合）ごとに詳細な講評（良かった点、改善すべき点、間違っている点、あなたへのアドバイス）を日本語でJSON形式で出力してください。\n"; // Updated label here
+                    gradingInstructions += "評価は以下の項目についてA+, A, B, C, D, E, Fのいずれかで採点し、その後に各評価項目（文法、語彙、構成、内容、スペル・表記、総合）ごとに詳細な講評（良かった点、改善すべき点、間違っている点、あなたへのアドバイス）を日本語でJSON形式で出力してください。\n";
                     gradingInstructions += "A+ は完璧で、直すところがないような最高の評価です。F は一番低い評価で、0点に近い低い点数になります。\n\n";
                     gradingInstructions += "評価項目と詳細フィードバックの要件:\n";
                     gradingInstructions += "- 各項目（文法、語彙、構成、内容、スペル・表記、総合）に対して、それぞれ以下の4つのサブ項目で講評を記載してください。\n";
-                    gradingInstructions += "    - 良かった点（good_points）: その項目で評価できる点\n"; // Updated label here
+                    gradingInstructions += "    - 良かった点（good_points）: その項目で評価できる点\n";
                     gradingInstructions += "    - 改善すべき点（improvements）: 全体的に見て改善の余地がある点\n";
                     gradingInstructions += "    - 間違っている点（mistakes）: 明らかな誤りや修正が必要な点\n";
-                    gradingInstructions += "    - あなたへのアドバイス（suggestions）: さらに質を高めるための具体的な提案\n\n"; // Updated label here
+                    gradingInstructions += "    - あなたへのアドバイス（suggestions）: さらに質を高めるための具体的な提案\n\n";
 
-                    // Specific instruction for grammar mistake details, including "reason"
-                    gradingInstructions += "文法のフィードバックでは、'mistake_details' という配列に、個々の間違いについて 'error' (間違っている箇所), 'reason' (間違いの理由), 'correction_example' (改善例) を含めて、箇条書きの表形式で表示できるようにしてください。表の列順は、間違っている点、改善例、理由の順にしてください。\n\n"; // Updated instruction for order
-
+                    gradingInstructions += "文法のフィードバックでは、'mistake_details' という配列に、個々の間違いについて 'error' (間違っている箇所), 'reason' (間違いの理由), 'correction_example' (改善例) を含めて、箇条書きの表形式で表示できるようにしてください。表の列順は、間違っている点、改善例、理由の順にしてください。\n\n";
 
                     const enabledGradingItems = [];
                     const itemDescriptions = {
@@ -1286,16 +1430,16 @@
                                                 "type": "OBJECT",
                                                 "properties": {
                                                     "good_points": { "type": "STRING" },
-                                                    "mistake_details": { // New field for grammar specific structured feedback
+                                                    "mistake_details": {
                                                         "type": "ARRAY",
                                                         "items": {
                                                             "type": "OBJECT",
                                                             "properties": {
                                                                 "error": { "type": "STRING" },
-                                                                "reason": { "type": "STRING" }, // Added 'reason' field
+                                                                "reason": { "type": "STRING" },
                                                                 "correction_example": { "type": "STRING" }
                                                             },
-                                                            "propertyOrdering": ["error", "correction_example", "reason"] // Order updated for JSON response
+                                                            "propertyOrdering": ["error", "correction_example", "reason"]
                                                         }
                                                     },
                                                     "improvements": { "type": "STRING" },
@@ -1357,7 +1501,7 @@
                     // Gemini APIキーをここに設定してください。
                     // 外部デプロイ時には、環境変数などを用いて安全に管理することを強く推奨します。
                     const apiKey = "AIzaSyDs9OB6HwwvuOjH6CC8TSzRGCSWZxwsQNc"; // 例: "YOUR_GEMINI_API_KEY_HERE";
-                    // === Gemini API Key Setting End ===
+                    // === Gemini API Key End ===
 
                     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
@@ -1396,7 +1540,7 @@
                         structure: parsedJson.structure_grade,
                         content: parsedJson.content_grade,
                         spelling: parsedJson.spelling_grade,
-                        overall: parsedJson.overall_grade // For overall section
+                        overall: parsedJson.overall_grade
                     };
 
                     gradingItemOrder.forEach(item => {
@@ -1426,18 +1570,17 @@
                                 content: '内容',
                                 spelling: 'スペル・表記'
                             };
-                            // Pass grammarMistakeDetails for grammar section
                             const grammarMistakeDetails = (item === 'grammar' && feedback.grammar && Array.isArray(feedback.grammar.mistake_details)) ? feedback.grammar.mistake_details : null;
                             
                             feedbackArea.innerHTML += createFeedbackSection(
                                 `feedback-${item}`,
                                 labelMap[item],
-                                gradeMap[item], // Pass the grade for this specific section
+                                gradeMap[item],
                                 feedback[item].good_points,
                                 feedback[item].improvements,
                                 feedback[item].mistakes,
                                 feedback[item].suggestions,
-                                grammarMistakeDetails // Pass structured details for grammar
+                                grammarMistakeDetails
                             );
                         }
                     });
