@@ -33,9 +33,48 @@
             border: 1px solid #e0e0e0;
             flex-grow: 1; /* 利用可能なスペースを埋めるように成長 */
         }
+        .header-section { /* Added for h1 and info button positioning */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative; /* For absolute positioning of info button */
+            margin-bottom: 24px;
+        }
         h1 {
             font-size: 2.2rem; /* タイトルを調整 */
+            text-align: center;
+            flex-grow: 1; /* Allow h1 to take available space */
         }
+        .info-button { /* Info icon button style */
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #E6F0FF;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            border: 1px solid #C4DAFC;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            margin-left: 10px; /* Space from title */
+        }
+        .info-button:hover {
+            background-color: #D8E6FF;
+            transform: translateY(-50%) scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        .info-button svg {
+            color: #5B86E5;
+            width: 20px;
+            height: 20px;
+        }
+
         p {
             font-size: 0.9rem; /* 一般の段落のフォントサイズを調整 */
         }
@@ -249,6 +288,16 @@
             color: #5B86E5;
             width: 20px; /* アイコンサイズを調整 */
             height: 20px;
+        }
+        .feedback-section .section-grade { /* Style for small grade next to feedback title */
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #5B86E5;
+            margin-left: 8px;
+            background-color: #E6F0FF;
+            padding: 2px 8px;
+            border-radius: 8px;
+            border: 1px solid #C4DAFC;
         }
         .feedback-section p {
             font-size: 0.9rem; /* 段落のフォントサイズを調整 */
@@ -633,9 +682,19 @@
                 padding: 12px;
                 margin-top: 8px;
             }
+            .header-section {
+                margin-bottom: 20px;
+            }
             h1 {
                 font-size: 1.8rem;
-                margin-bottom: 15px;
+            }
+            .info-button {
+                width: 30px;
+                height: 30px;
+            }
+            .info-button svg {
+                width: 16px;
+                height: 16px;
             }
             p {
                 font-size: 0.85rem;
@@ -713,6 +772,10 @@
                 width: 18px;
                 height: 18px;
             }
+            .feedback-section .section-grade {
+                font-size: 0.8rem;
+                padding: 1px 6px;
+            }
             .feedback-section p {
                 font-size: 0.8rem;
             }
@@ -775,7 +838,14 @@
 </head>
 <body class="antialiased">
     <div class="container">
-        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">英作くん - AI英文添削サービス</h1>
+        <div class="header-section">
+            <h1 class="text-3xl font-bold text-gray-800">英作くん - AI英文添削サービス</h1>
+            <button id="headerInfoButton" class="info-button">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </button>
+        </div>
 
         <p class="text-gray-600 text-center mb-8">
             ここに自分の英作文を入力して、「AI添削する」ボタンを押すと、AIが詳細なフィードバックと採点を提供します。
@@ -946,6 +1016,7 @@
             const essayInput = document.getElementById('essayInput');
             const gradeButton = document.getElementById('gradeButton');
             const settingsButton = document.getElementById('settingsButton');
+            const headerInfoButton = document.getElementById('headerInfoButton'); // New: Header info button
             const resultsDiv = document.getElementById('results');
             const overallGradeArea = document.getElementById('overallGradeArea');
             const detailedGradeArea = document.getElementById('detailedGradeArea');
@@ -995,6 +1066,11 @@
                 disclaimerModal.classList.add('hidden');
             });
 
+            // New: Event listener for the header info button
+            headerInfoButton.addEventListener('click', () => {
+                disclaimerModal.classList.remove('hidden');
+            });
+
             function showMessage(type, message) {
                 if (type === 'error') {
                     errorMessage.textContent = message;
@@ -1017,13 +1093,13 @@
             }
 
             // Function to generate a feedback section HTML
-            function createFeedbackSection(id, title, good_points, improvements, mistakes, suggestions, grammarMistakeDetails = null) {
+            function createFeedbackSection(id, title, grade, good_points, improvements, mistakes, suggestions, grammarMistakeDetails = null) {
                 let content = '';
 
-                // Changed "よかった点" to "良かった点" and removed colon
-                if (good_points && good_points.trim() !== '') {
-                    content += `<p>・<strong>良かった点</strong><br>${good_points}</p>`;
-                }
+                // Added grade display next to title
+                const gradeDisplay = grade ? `<span class="section-grade">${grade}</span>` : '';
+
+                content += `<p>・<strong>良かった点</strong><br>${good_points}</p>`;
 
                 // Grammar section specific display
                 if (title === '文法' && grammarMistakeDetails && grammarMistakeDetails.length > 0) {
@@ -1071,7 +1147,7 @@
 
                 return `
                     <div id="${id}" class="feedback-section">
-                        <h3>${iconSvg}${title}</h3>
+                        <h3>${iconSvg}${title}${gradeDisplay}</h3>
                         ${content}
                     </div>
                 `;
@@ -1280,7 +1356,7 @@
                     // === Gemini API Key Setting Start ===
                     // Gemini APIキーをここに設定してください。
                     // 外部デプロイ時には、環境変数などを用いて安全に管理することを強く推奨します。
-                    const apiKey = ""; // 例: "YOUR_GEMINI_API_KEY_HERE";
+                    const apiKey = "AIzaSyDs9OB6HwwvuOjH6CC8TSzRGCSWZxwsQNc"; // 例: "YOUR_GEMINI_API_KEY_HERE";
                     // === Gemini API Key Setting End ===
 
                     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
@@ -1314,6 +1390,15 @@
                     // Display detailed grades
                     detailedGradeArea.innerHTML = '';
                     const gradingItemOrder = ['grammar', 'vocabulary', 'structure', 'content', 'spelling'];
+                    const gradeMap = {
+                        grammar: parsedJson.grammar_grade,
+                        vocabulary: parsedJson.vocabulary_grade,
+                        structure: parsedJson.structure_grade,
+                        content: parsedJson.content_grade,
+                        spelling: parsedJson.spelling_grade,
+                        overall: parsedJson.overall_grade // For overall section
+                    };
+
                     gradingItemOrder.forEach(item => {
                         if (currentGradingConfig[item]) {
                             const labelMap = {
@@ -1323,14 +1408,14 @@
                                 content: '内容',
                                 spelling: 'スペル・表記'
                             };
-                            detailedGradeArea.innerHTML += createGradeItem(labelMap[item], parsedJson[`${item}_grade`], `feedback-${item}`);
+                            detailedGradeArea.innerHTML += createGradeItem(labelMap[item], gradeMap[item], `feedback-${item}`);
                         }
                     });
 
                     // Display detailed feedback for each category
                     const feedback = parsedJson.detailed_feedback;
                     feedbackArea.innerHTML =
-                        createFeedbackSection('feedback-overall', '総合', feedback.overall.good_points, feedback.overall.improvements, feedback.overall.mistakes, feedback.overall.suggestions);
+                        createFeedbackSection('feedback-overall', '総合', gradeMap.overall, feedback.overall.good_points, feedback.overall.improvements, feedback.overall.mistakes, feedback.overall.suggestions);
 
                     gradingItemOrder.forEach(item => {
                         if (currentGradingConfig[item]) {
@@ -1347,6 +1432,7 @@
                             feedbackArea.innerHTML += createFeedbackSection(
                                 `feedback-${item}`,
                                 labelMap[item],
+                                gradeMap[item], // Pass the grade for this specific section
                                 feedback[item].good_points,
                                 feedback[item].improvements,
                                 feedback[item].mistakes,
