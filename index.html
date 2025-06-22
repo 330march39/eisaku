@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英作くん</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        html, body { /* Added html height for proper vh calculation */
+            height: 100%;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F7F7F7; /* ベースの背景色をF7F7F7に設定 */
+            display: flex; /* Flexboxを適用 */
+            flex-direction: column; /* 子要素を縦に並べる */
+            min-height: 100vh; /* 少なくともビューポートの高さ全体を占める */
+            padding: 15px; /* 全体的なパディングを調整し、文字を読みやすく */
+            box-sizing: border-box;
+            font-size: 0.9rem; /* 全体の基本フォントサイズを調整 */
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px; /* パディングを調整 */
+            border-radius: 20px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1); /* 影を調整 */
+            max-width: 900px; /* 最大幅を調整 */
+            width: 100%;
+            margin-top: 20px;
+            border: 1px solid #e0e0e0;
+            flex-grow: 1; /* 利用可能なスペースを埋めるように成長 */
+        }
+        h1 {
+            font-size: 2.2rem; /* タイトルを調整 */
+        }
+        p {
+            font-size: 0.9rem; /* 一般の段落のフォントサイズを調整 */
+        }
+        textarea {
+            width: 100%;
+            height: 220px; /* 高さを調整 */
+            padding: 15px; /* パディングを調整 */
+            border: 2px solid #D1DBE5;
+            border-radius: 15px;
+            font-size: 0.95rem; /* テキストエリアのフォントサイズを調整 */
+            resize: vertical;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            outline: none;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+            line-height: 1.5;
+        }
+        textarea:focus {
+            border-color: #5B86E5;
+            box-shadow: 0 0 0 4px rgba(91, 134, 229, 0.3);
+        }
+        /* AI添削するボタンのスタイル */
+        button#gradeButton {
+            background: linear-gradient(135deg, #5B86E5 0%, #4169E1 100%);
+            color: #ffffff;
+            padding: 16px 35px; /* ボタンのサイズを調整 */
+            border-radius: 20px; /* 角を調整 */
+            font-size: 1.4rem; /* フォントサイズを調整 */
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+            border: none;
+            box-shadow: 0 8px 20px rgba(91, 134, 229, 0.5); /* 影を調整 */
+            letter-spacing: 0.04em; /* 文字間隔を調整 */
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px; /* アイコンとテキストの間隔を調整 */
+        }
+        button#gradeButton::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+            z-index: -1;
+        }
+        button#gradeButton:hover::before {
+            left: 100%;
+        }
+        button#gradeButton:hover {
+            transform: translateY(-6px) scale(1.01); /* リフトアップと拡大を調整 */
+            box-shadow: 0 12px 30px rgba(65, 105, 225, 0.7);
+        }
+        button#gradeButton:active {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(91, 134, 229, 0.4);
+            background: linear-gradient(135deg, #4169E1 0%, #5B86E5 100%);
+        }
+        button#gradeButton svg {
+            width: 25px; /* アイコンサイズを調整 */
+            height: 25px;
+        }
+
+        /* 詳細設定ボタンのスタイル */
+        button#settingsButton {
+            background-color: #A0D0F5; /* 明るい青色 */
+            color: #2C5282; /* 濃い青色の文字 */
+            padding: 8px 18px; /* パディングを調整 */
+            border-radius: 12px; /* 角を調整 */
+            font-size: 0.85rem; /* フォントサイズを調整 */
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+            border: none;
+            box-shadow: 0 3px 8px rgba(160, 208, 245, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px; /* アイコンとテキストの間隔を調整 */
+        }
+        button#settingsButton:hover {
+            background-color: #8BC9F0;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(160, 208, 245, 0.6);
+        }
+        button#settingsButton:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(160, 208, 245, 0.3);
+        }
+        button#settingsButton svg {
+            width: 18px; /* アイコンサイズを調整 */
+            height: 18px;
+        }
+
+        /* 区切り線スタイル */
+        .separator {
+            border-top: 1px solid #e0e0e0;
+            margin: 30px 0;
+            opacity: 0.7;
+        }
+
+        /* Grades display layout */
+        .overall-grade-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px; /* 間隔を調整 */
+        }
+        .detailed-grades-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* 最小幅を調整 */
+            gap: 12px; /* 間隔を調整 */
+            margin-bottom: 30px;
+        }
+        .grade-item {
+            background: linear-gradient(135deg, #E6F0FF 0%, #D8E6FF 100%);
+            padding: 15px 10px; /* パディングを調整 */
+            border-radius: 12px; /* 角を調整 */
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06); /* 影を調整 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #C4DAFC;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .grade-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 0;
+            transition: transform 0.3s ease;
+            transform: scale(0);
+            border-radius: 50%;
+        }
+        .grade-item:hover::before {
+            transform: scale(2);
+        }
+        .grade-item:hover {
+            transform: translateY(-3px); /* リフトアップを調整 */
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.09);
+        }
+        .grade-label {
+            font-size: 0.8rem; /* フォントサイズを調整 */
+            color: #4A5568;
+            margin-bottom: 3px;
+            font-weight: 600;
+        }
+        .grade-value {
+            font-size: 2rem; /* フォントサイズを調整 */
+            font-weight: 800;
+            color: #333333;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+        }
+        /* Specific style for Overall grade item */
+        .overall-grade-item {
+            min-width: 180px; /* 総合評価のアイテムの最小幅を調整 */
+            padding: 20px 15px; /* パディングを調整 */
+            background: linear-gradient(135deg, #5B86E5 0%, #4169E1 100%);
+            color: #ffffff;
+            box-shadow: 0 7px 20px rgba(91, 134, 229, 0.4);
+        }
+        .overall-grade-item .grade-label {
+            color: #e0e0e0;
+        }
+        .overall-grade-item .grade-value {
+            font-size: 2.5rem; /* 総合評価のフォントサイズを調整 */
+            color: #ffffff;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
+        }
+
+        .feedback-section {
+            background-color: #ffffff;
+            padding: 20px; /* パディングを調整 */
+            border-radius: 15px; /* 角を調整 */
+            margin-bottom: 18px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.05); /* 影を調整 */
+            transition: all 0.3s ease-in-out;
+        }
+        .feedback-section:hover {
+             box-shadow: 0 7px 18px rgba(0, 0, 0, 0.08);
+        }
+        .feedback-section h3 {
+            font-size: 1.15rem; /* 見出しのフォントサイズを調整 */
+            font-weight: 700;
+            color: #333333;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #E6F0FF; /* 境界線を調整 */
+            padding-bottom: 6px;
+            display: flex;
+            align-items: center;
+        }
+        .feedback-section h3 svg {
+            margin-right: 8px;
+            color: #5B86E5;
+            width: 20px; /* アイコンサイズを調整 */
+            height: 20px;
+        }
+        .feedback-section p {
+            font-size: 0.9rem; /* 段落のフォントサイズを調整 */
+            line-height: 1.6;
+            color: #4A5568;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin-bottom: 0.6em;
+        }
+        /* Removed colon from strong tags */
+        .feedback-section p strong {
+            margin-left: 0.5em; /* 箇条書きの「・」の後のスペース */
+        }
+        /* Grammar specific feedback table-like styling */
+        .grammar-feedback-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 15px; /* 表の下に余白を追加 */
+        }
+        .grammar-feedback-table th, .grammar-feedback-table td {
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            text-align: left;
+            font-size: 0.85rem;
+            vertical-align: top;
+        }
+        .grammar-feedback-table th {
+            background-color: #F0F4F8;
+            color: #4A5568;
+            font-weight: 600;
+            white-space: nowrap;
+            width: 25%; /* Adjust column width */
+        }
+        .grammar-feedback-table td {
+            background-color: #FFFFFF;
+            color: #333333;
+        }
+        .grammar-feedback-table ul {
+            list-style: none; /* Remove default bullet */
+            padding-left: 0;
+            margin-bottom: 0;
+        }
+        .grammar-feedback-table li {
+            position: relative;
+            padding-left: 15px; /* Space for custom bullet */
+            margin-bottom: 5px;
+        }
+        .grammar-feedback-table li::before {
+            content: '•'; /* Custom bullet point */
+            color: #5B86E5; /* Blue bullet */
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        .grammar-feedback-table li:last-child {
+            margin-bottom: 0;
+        }
+
+
+        /* Animations */
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.97);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scale(1.02);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+        }
+
+        .results-fade-in {
+            animation: fadeInScale 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        .loading-indicator {
+            text-align: center;
+            padding: 20px;
+            font-size: 1rem;
+            color: #5B86E5;
+            font-weight: 600;
+            animation: pulse 1.5s infinite ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            margin-top: 10px;
+        }
+        .loading-indicator svg {
+            margin-right: 10px;
+            color: #4169E1;
+            width: 18px;
+            height: 18px;
+        }
+        .error-message {
+            text-align: center;
+            padding: 18px;
+            font-size: 0.95rem;
+            color: #EF4444;
+            font-weight: 500;
+            background-color: #FEF2F2;
+            border: 1px solid #FCA5A5;
+            border-radius: 10px;
+            margin-top: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Modal specific styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background-color: #ffffff;
+            padding: 20px; /* モーダルのパディングを調整 */
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            max-width: 500px; /* モーダルの最大幅を調整 */
+            width: 90%;
+            text-align: center;
+            position: relative;
+            animation: fadeInScale 0.4s ease-out forwards;
+        }
+        .modal-content h2 {
+            font-size: 1.4rem; /* モーダルタイトルのフォントサイズを調整 */
+            font-weight: 700;
+            color: #333333;
+            margin-bottom: 15px;
+        }
+        .modal-content p {
+            font-size: 0.85rem; /* モーダル本文のフォントサイズを調整 */
+            color: #4A5568;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        .terms-box {
+            background-color: #f7f7f7;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 10px; /* 利用規約ボックスのパディングを調整 */
+            max-height: 150px; /* 高さを調整 */
+            overflow-y: auto;
+            text-align: left;
+            font-size: 0.8rem; /* 利用規約のフォントサイズを調整 */
+            color: #666666;
+            line-height: 1.4;
+            margin-bottom: 18px;
+        }
+        /* モーダル内の同意ボタンのスタイル */
+        .modal-button {
+            background: linear-gradient(135deg, #5B86E5 0%, #4169E1 100%);
+            color: #ffffff;
+            padding: 12px 30px; /* モーダルボタンのサイズを調整 */
+            border-radius: 10px;
+            font-size: 1rem; /* フォントサイズを調整 */
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+            border: none;
+            box-shadow: 0 5px 15px rgba(91, 134, 229, 0.4);
+        }
+        .modal-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(65, 105, 225, 0.5);
+        }
+        .modal-button:active {
+            transform: translateY(0);
+            box-shadow: 0 3px 10px rgba(91, 134, 229, 0.3);
+        }
+
+        /* Settings Modal specific styles */
+        .settings-modal-content {
+            background-color: #ffffff;
+            padding: 25px; /* 設定モーダルのパディングを調整 */
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            max-width: 650px; /* 設定モーダルの最大幅を調整 */
+            width: 90%;
+            max-height: 90vh; /* 画面に収まるように高さを制限 */
+            overflow-y: auto; /* 必要に応じてスクロール可能にする */
+            text-align: left;
+            position: relative;
+            animation: fadeInScale 0.4s ease-out forwards;
+        }
+        .settings-modal-content h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #333333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .settings-section {
+            margin-bottom: 25px; /* 間隔を調整 */
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .settings-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .settings-section h3 {
+            font-size: 1.2rem; /* 見出しのフォントサイズを調整 */
+            font-weight: 600;
+            color: #5B86E5;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px; /* 間隔を調整 */
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem; /* フォントサイズを調整 */
+            color: #4A5568;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .checkbox-item:hover {
+            color: #5B86E5;
+        }
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 6px; /* 間隔を調整 */
+            width: 18px; /* サイズを調整 */
+            height: 18px;
+            border: 1px solid #5B86E5; /* 境界線を調整 */
+            border-radius: 5px;
+            flex-shrink: 0;
+        }
+        .checkbox-item input[type="checkbox"]:checked {
+            background-color: #5B86E5;
+            border-color: #5B86E5;
+        }
+        .checkbox-item input[type="checkbox"]:checked::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 5px; /* チェックマークサイズを調整 */
+            height: 10px;
+            border: solid white;
+            border-width: 0 1.5px 1.5px 0;
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+        .settings-textarea {
+            width: 100%;
+            height: 100px; /* 高さを調整 */
+            padding: 10px; /* パディングを調整 */
+            border: 1px solid #D1DBE5;
+            border-radius: 8px;
+            font-size: 0.9rem; /* フォントサイズを調整 */
+            resize: vertical;
+        }
+        .quick-prompt-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px; /* 間隔を調整 */
+            margin-top: 12px;
+        }
+        .quick-prompt-button {
+            background-color: #E6F0FF;
+            color: #4169E1;
+            padding: 6px 12px; /* パディングを調整 */
+            border-radius: 8px;
+            font-size: 0.8rem; /* フォントサイズを調整 */
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid #C4DAFC;
+        }
+        .quick-prompt-button:hover {
+            background-color: #D8E6FF;
+            transform: translateY(-1px);
+        }
+        .quick-prompt-button:active {
+            transform: translateY(0);
+        }
+        .settings-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px; /* 間隔を調整 */
+            margin-top: 25px;
+        }
+        .settings-apply-button {
+            background: linear-gradient(135deg, #5B86E5 0%, #4169E1 100%);
+            color: #ffffff;
+            padding: 8px 20px; /* パディングを調整 */
+            border-radius: 10px;
+            font-size: 0.95rem; /* フォントサイズを調整 */
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+            border: none;
+            box-shadow: 0 4px 12px rgba(91, 134, 229, 0.4);
+        }
+        .settings-apply-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(65, 105, 225, 0.5);
+        }
+        .settings-apply-button:active {
+            transform: translateY(0);
+            box-shadow: 0 3px 8px rgba(91, 134, 229, 0.3);
+        }
+        .settings-cancel-button {
+            background-color: #CBD5E1;
+            color: #4A5568;
+            padding: 8px 20px; /* パディングを調整 */
+            border-radius: 10px;
+            font-size: 0.95rem; /* フォントサイズを調整 */
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+            border: none;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+        .settings-cancel-button:hover {
+            background-color: #A0B3C8;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+        .settings-cancel-button:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Footer styles */
+        footer.footer { /* Updated selector to target footer tag */
+            text-align: center;
+            margin-top: 40px; /* Adjust as needed for spacing from content */
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            color: #666;
+            font-size: 0.8rem;
+            flex-shrink: 0; /* フッターが縮まないようにする */
+        }
+        footer.footer p { /* Updated selector for p inside footer */
+            margin-bottom: 5px;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            body {
+                padding: 8px;
+            }
+            .container {
+                padding: 12px;
+                margin-top: 8px;
+            }
+            h1 {
+                font-size: 1.8rem;
+                margin-bottom: 15px;
+            }
+            p {
+                font-size: 0.85rem;
+                margin-bottom: 15px;
+            }
+            textarea {
+                height: 150px;
+                font-size: 0.85rem;
+                padding: 10px;
+            }
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 20px;
+            }
+            button#gradeButton {
+                font-size: 1.2rem;
+                padding: 12px 25px;
+                gap: 8px;
+                width: 100%;
+                max-width: 280px;
+            }
+            button#gradeButton svg {
+                width: 20px;
+                height: 20px;
+            }
+            button#settingsButton {
+                font-size: 0.8rem;
+                padding: 8px 15px;
+                gap: 5px;
+                width: 100%;
+                max-width: 180px;
+            }
+            button#settingsButton svg {
+                width: 16px;
+                height: 16px;
+            }
+            .separator {
+                margin: 20px 0;
+            }
+            .overall-grade-item {
+                min-width: unset;
+                width: 80%; /* モバイルで適切に表示されるよう調整 */
+                max-width: 220px;
+                padding: 15px 12px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .overall-grade-item .grade-value {
+                font-size: 2.2rem;
+            }
+            .detailed-grades-grid {
+                grid-template-columns: 1fr; /* モバイルでは1列にする */
+                gap: 10px;
+                margin-bottom: 25px;
+            }
+            .grade-item {
+                padding: 10px 8px;
+            }
+            .grade-label {
+                font-size: 0.75rem;
+            }
+            .grade-value {
+                font-size: 1.5rem;
+            }
+            .feedback-section {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+            .feedback-section h3 {
+                font-size: 1rem;
+            }
+            .feedback-section h3 svg {
+                width: 18px;
+                height: 18px;
+            }
+            .feedback-section p {
+                font-size: 0.8rem;
+            }
+            .grammar-feedback-table th, .grammar-feedback-table td {
+                padding: 6px 8px;
+                font-size: 0.75rem;
+            }
+            .grammar-feedback-table th {
+                width: 30%; /* Adjust column width for mobile */
+            }
+            .modal-content, .settings-modal-content {
+                padding: 15px;
+                width: 95%;
+                max-height: 90vh; /* Adjust for smaller screens */
+            }
+            .modal-content h2, .settings-modal-content h2 {
+                font-size: 1.2rem;
+            }
+            .modal-content p {
+                font-size: 0.75rem;
+            }
+            .terms-box {
+                max-height: 100px;
+                font-size: 0.7rem;
+            }
+            .modal-button, .settings-apply-button, .settings-cancel-button {
+                font-size: 0.9rem;
+                padding: 10px 18px;
+            }
+            .settings-section h3 {
+                font-size: 1rem;
+            }
+            .checkbox-item, .quick-prompt-button {
+                font-size: 0.8rem;
+            }
+            .settings-textarea {
+                font-size: 0.8rem;
+                height: 80px;
+            }
+            .quick-prompt-buttons {
+                gap: 6px;
+            }
+            footer.footer { /* Updated selector for mobile footer */
+                padding-top: 15px;
+            }
+        }
+        @media (max-width: 480px) {
+            .detailed-grades-grid {
+                grid-template-columns: 1fr; /* 1列にする */
+            }
+            .overall-grade-item {
+                width: 90%; /* さらに幅を広げる */
+            }
+            .checkbox-group {
+                flex-direction: column; /* チェックボックスを縦に並べる */
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">英作くん - AI英文添削サービス</h1>
+
+        <p class="text-gray-600 text-center mb-8">
+            ここに自分の英作文を入力して、「AI添削する」ボタンを押すと、AIが詳細なフィードバックと採点を提供します。
+            英検対策、授業の課題、英作文力向上にお役立てください。
+        </p>
+
+        <textarea id="essayInput" placeholder="ここに英作文を入力してください..." class="mb-6"></textarea>
+
+        <div class="flex justify-center items-center flex-wrap gap-4 mb-8 button-group">
+            <button id="gradeButton">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                AI添削する
+            </button>
+            <button id="settingsButton">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <!-- Icon for settings button - same as "添削項目" as requested -->
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                詳細設定
+            </button>
+        </div>
+
+        <div class="separator"></div>
+
+        <div id="results" class="hidden">
+            <h2 class="text-2xl font-semibold text-gray-700 mb-5 text-center">添削結果</h2>
+
+            <!-- Overall Grade Display -->
+            <div class="overall-grade-container" id="overallGradeArea">
+                <!-- Overall grade will be inserted here by JavaScript -->
+            </div>
+
+            <!-- Detailed Grades Display -->
+            <div class="detailed-grades-grid" id="detailedGradeArea">
+                <!-- Detailed grades will be inserted here by JavaScript -->
+            </div>
+
+            <!-- Detailed Feedback -->
+            <div id="feedbackArea">
+                <!-- Feedback will be inserted here by JavaScript -->
+            </div>
+        </div>
+
+        <div id="loading" class="hidden loading-indicator">
+            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            添削中...少々お待ちください。
+        </div>
+        <div id="error" class="hidden error-message">
+            エラーが発生しました。もう一度お試しください。
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>AIは不正確な情報を表示することがあるため、生成された回答を再確認するようにしてください。</p>
+        <p>&copy;2020-2025 teamENO</p>
+    </footer>
+
+    <!-- Disclaimer Modal -->
+    <div id="disclaimerModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2>ご利用にあたっての注意事項</h2>
+            <p>このサービスはAI（人工知能）を利用して英文添削を行っています。AIによる添削結果には、誤った情報が含まれる可能性があり、その正確性を保証するものではありません。</p>
+            <p>添削結果はあくまで参考としてご利用ください。当サービスのご利用により生じたいかなる損害についても、当方は一切の責任を負いません。</p>
+
+            <div class="terms-box">
+                <h3>利用規約</h3>
+                <p>
+                    <strong>第1条（本サービスの目的）</strong><br>
+                    本サービス「英作くん」は、ユーザーが入力した英文に対してAIによる添削とフィードバックを提供することを目的とします。本サービスは学習補助ツールであり、専門家による添削を代替するものではありません。
+                </p>
+                <p>
+                    <strong>第2条（免責事項）</strong><br>
+                    1. 本サービスが提供するAI添削結果は、入力された英文に基づきAIが生成したものであり、その内容の正確性、完全性、信頼性、有用性、特定の目的への適合性について、いかなる保証も行いません。<br>
+                    2. AIの特性上、添削結果に誤り、不適切な表現、またはユーザーの意図と異なる内容が含まれる可能性があります。ユーザーはこれを理解し、自身の判断と責任において本サービスを利用するものとします。<br>
+                    3. 本サービスのご利用によって生じたいかなる損害（直接的、間接的、偶発的、結果的損害、または逸失利益を含むがこれに限らない）についても、当方は一切の責任を負いません。ユーザーは、本サービスを利用したことにより第三者との間で紛争が生じた場合、自己の責任と費用においてこれを解決するものとします。<br>
+                    4. 本サービスは、システムの障害、通信環境の悪化、メンテナンス等により、事前の通知なく一時的に中断または停止されることがあります。これによりユーザーに生じた損害についても、当方は責任を負いません。
+                </p>
+                <p>
+                    <strong>第3条（禁止事項）</strong><br>
+                    ユーザーは、本サービスの利用にあたり、以下の行為を行ってはならないものとします。<br>
+                    1. 法令または公序良俗に違反する行為<br>
+                    2. 他のユーザーまたは第三者の著作権、商標権等の知的財産権、プライバシー権、肖像権その他の権利を侵害する行為、または侵害するおそれのある行為<br>
+                    3. 他のユーザーまたは第三者を誹謗中傷する行為、または名誉・信用を毀損する行為<br>
+                    4. 犯罪行為またはこれを助長する行為<br>
+                    5. 本サービスの運営を妨害する行為<br>
+                    6. その他、当方が不適切と判断する行為
+                </p>
+                <p>
+                    <strong>第4条（個人情報の取扱い）</strong><br>
+                    当方は、本サービスを通じて取得したユーザーの個人情報を、別途定めるプライバシーポリシーに基づき、適切に取り扱います。
+                </p>
+                <p>
+                    <strong>第5条（利用規約の変更）</strong><br>
+                    当方は、ユーザーに事前の通知をすることなく、本規約の全部または一部を変更できるものとします。変更後の規約は、本ウェブサイトに掲載された時点から効力を生じるものとします。
+                </p>
+                <p>
+                    <strong>第6条（準拠法および管轄裁判所）</strong><br>
+                    本規約の解釈にあたっては、日本法を準拠法とします。本サービスに関して紛争が生じた場合には、当方の本店所在地を管轄する裁判所を第一審の専属的合意管轄裁判所とします。
+                </p>
+            </div>
+            <button id="agreeButton" class="modal-button">上記の内容に同意する</button>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal-overlay hidden">
+        <div class="settings-modal-content">
+            <h2>詳細設定</h2>
+
+            <div class="settings-section">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>添削項目</h3>
+                <div class="checkbox-group">
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="checkGrammar" checked> 文法（Grammar）
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="checkVocabulary" checked> 語彙（Vocabulary）
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="checkStructure" checked> 構成（Structure / Organization）
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="checkContent" checked> 内容（Content）
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="checkSpelling" checked> スペル・表記（Spelling & Formatting）
+                    </label>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <!-- Icon for "AIに指示する（プロンプト）" - same as "添削項目" -->
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>AIに指示する（プロンプト）</h3>
+                <textarea id="customPromptInput" class="settings-textarea" placeholder="AIへの追加指示を入力してください（例：これはビジネスメールの添削です）"></textarea>
+                <div class="quick-prompt-buttons">
+                    <button class="quick-prompt-button" data-prompt-text="これは英検の一次試験ライティング対策の英作文です。">英検</button>
+                    <button class="quick-prompt-button" data-prompt-text="これは中学英語レベルの英作文です。">中学</button>
+                    <button class="quick-prompt-button" data-prompt-text="これは高校英語レベルの英作文です。">高校</button>
+                    <button class="quick-prompt-button" data-prompt-text="これは大学レベルの学術的な英作文です。">大学</button>
+                    <button class="quick-prompt-button" data-prompt-text="これはカジュアルな日記の記述です。">日記</button>
+                    <button class="quick-prompt-button" data-prompt-text="これはTOEFLの独立型ライティング問題への解答です。">TOEFL</button>
+                    <button class="quick-prompt-button" data-prompt-text="これはTOEICのビジネスメールライティングです。">TOEIC</button>
+                    <button class="quick-prompt-button" data-prompt-text="これはIELTSのタスク2エッセイです。">IELTS</button>
+                    <button class="quick-prompt-button" data-prompt-text="これはGTECのライティング問題です。">GTEC</button>
+                </div>
+            </div>
+
+            <div class="settings-actions">
+                <button id="applySettingsButton" class="settings-apply-button">適用</button>
+                <button id="cancelSettingsButton" class="settings-cancel-button">キャンセル</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const essayInput = document.getElementById('essayInput');
+            const gradeButton = document.getElementById('gradeButton');
+            const settingsButton = document.getElementById('settingsButton');
+            const resultsDiv = document.getElementById('results');
+            const overallGradeArea = document.getElementById('overallGradeArea');
+            const detailedGradeArea = document.getElementById('detailedGradeArea');
+            const feedbackArea = document.getElementById('feedbackArea');
+            const loadingIndicator = document.getElementById('loading');
+            const errorMessage = document.getElementById('error');
+
+            const disclaimerModal = document.getElementById('disclaimerModal');
+            const agreeButton = document.getElementById('agreeButton');
+            const AGREED_KEY = 'eisaku_kun_disclaimer_agreed';
+
+            const settingsModal = document.getElementById('settingsModal');
+            const applySettingsButton = document.getElementById('applySettingsButton');
+            const cancelSettingsButton = document.getElementById('cancelSettingsButton');
+            const customPromptInput = document.getElementById('customPromptInput');
+            const quickPromptButtons = document.querySelectorAll('.quick-prompt-button');
+
+            const gradingCheckboxes = {
+                grammar: document.getElementById('checkGrammar'),
+                vocabulary: document.getElementById('checkVocabulary'),
+                structure: document.getElementById('checkStructure'),
+                content: document.getElementById('checkContent'),
+                spelling: document.getElementById('checkSpelling'),
+            };
+
+            let currentGradingConfig = {
+                grammar: true,
+                vocabulary: true,
+                structure: true,
+                content: true,
+                spelling: true,
+            };
+            let currentCustomPrompt = '';
+
+            const savedSettings = JSON.parse(localStorage.getItem('eisaku_kun_settings'));
+            if (savedSettings) {
+                currentGradingConfig = savedSettings.gradingConfig;
+                currentCustomPrompt = savedSettings.customPrompt;
+            }
+
+            if (localStorage.getItem(AGREED_KEY) !== 'true') {
+                disclaimerModal.classList.remove('hidden');
+            }
+
+            agreeButton.addEventListener('click', () => {
+                localStorage.setItem(AGREED_KEY, 'true');
+                disclaimerModal.classList.add('hidden');
+            });
+
+            function showMessage(type, message) {
+                if (type === 'error') {
+                    errorMessage.textContent = message;
+                    errorMessage.classList.remove('hidden');
+                } else {
+                    errorMessage.classList.add('hidden');
+                }
+            }
+
+            function createGradeItem(label, value, targetId = null, isOverall = false) {
+                const dataTargetAttr = targetId ? `data-target="${targetId}"` : '';
+                const overallClass = isOverall ? 'overall-grade-item' : '';
+                const dataLabelAttr = `data-label="${label}"`;
+                return `
+                    <div class="grade-item ${overallClass}" ${dataTargetAttr} ${dataLabelAttr}>
+                        <div class="grade-label">${label}</div>
+                        <div class="grade-value">${value}</div>
+                    </div>
+                `;
+            }
+
+            // Function to generate a feedback section HTML
+            function createFeedbackSection(id, title, good_points, improvements, mistakes, suggestions, grammarMistakeDetails = null) {
+                let content = '';
+
+                // Changed "よかった点" to "良かった点" and removed colon
+                if (good_points && good_points.trim() !== '') {
+                    content += `<p>・<strong>良かった点</strong><br>${good_points}</p>`;
+                }
+
+                // Grammar section specific display
+                if (title === '文法' && grammarMistakeDetails && grammarMistakeDetails.length > 0) {
+                    content += `<p>・<strong>間違っている点と改善例</strong></p>`;
+                    content += `<table class="grammar-feedback-table">`;
+                    // Changed column order here: 間違っている点, 改善例, 理由
+                    content += `<thead><tr><th>間違っている点</th><th>改善例</th><th>理由</th></tr></thead>`;
+                    content += `<tbody>`;
+                    grammarMistakeDetails.forEach(detail => {
+                        content += `<tr><td><ul><li>${detail.error}</li></ul></td><td><ul><li>${detail.correction_example}</li></ul></td><td><ul><li>${detail.reason}</li></ul></td></tr>`;
+                    });
+                    content += `</tbody></table>`;
+                    // Add a blank line/space after the table
+                    content += `<div style="height: 15px;"></div>`;
+                } else {
+                    // General display for other sections or if grammar details are missing
+                    const trimmedImprovements = improvements ? improvements.trim() : '';
+                    const trimmedMistakes = mistakes ? mistakes.trim() : '';
+
+                    // Removed colon from "間違っている点"
+                    if (trimmedMistakes !== '') {
+                        content += `<p>・<strong>間違っている点</strong><br>${trimmedMistakes}</p>`;
+                    }
+
+                    // Removed colon from "改善すべき点"
+                    if (trimmedImprovements !== '' && trimmedImprovements !== trimmedMistakes) {
+                        content += `<p>・<strong>改善すべき点</strong><br>${trimmedImprovements}</p>`;
+                    }
+                }
+                
+                // Changed "suggestions" label to "あなたへのアドバイス" and removed colon
+                if (suggestions && suggestions.trim() !== '') {
+                    content += `<p>・<strong>あなたへのアドバイス</strong><br>${suggestions}</p>`;
+                }
+
+                if (content.trim() === '') {
+                    return ''; // Don't show empty sections
+                }
+
+                const iconSvg = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                `;
+
+                return `
+                    <div id="${id}" class="feedback-section">
+                        <h3>${iconSvg}${title}</h3>
+                        ${content}
+                    </div>
+                `;
+            }
+
+            function openSettingsModal() {
+                for (const key in gradingCheckboxes) {
+                    if (gradingCheckboxes.hasOwnProperty(key)) {
+                        gradingCheckboxes[key].checked = currentGradingConfig[key];
+                    }
+                }
+                customPromptInput.value = currentCustomPrompt;
+                settingsModal.classList.remove('hidden');
+            }
+
+            function closeSettingsModal(applyChanges) {
+                if (applyChanges) {
+                    for (const key in gradingCheckboxes) {
+                        if (gradingCheckboxes.hasOwnProperty(key)) {
+                            currentGradingConfig[key] = gradingCheckboxes[key].checked;
+                        }
+                    }
+                    currentCustomPrompt = customPromptInput.value.trim();
+                    localStorage.setItem('eisaku_kun_settings', JSON.stringify({
+                        gradingConfig: currentGradingConfig,
+                        customPrompt: currentCustomPrompt,
+                    }));
+                }
+                settingsModal.classList.add('hidden');
+            }
+
+            settingsButton.addEventListener('click', openSettingsModal);
+            applySettingsButton.addEventListener('click', () => closeSettingsModal(true));
+            cancelSettingsButton.addEventListener('click', () => closeSettingsModal(false));
+
+            quickPromptButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const promptText = button.dataset.promptText;
+                    if (customPromptInput.value.trim() !== '' && !customPromptInput.value.endsWith('\n')) {
+                        customPromptInput.value += '\n';
+                    }
+                    customPromptInput.value += promptText;
+                    customPromptInput.focus();
+                });
+            });
+
+
+            gradeButton.addEventListener('click', async () => {
+                const essayText = essayInput.value.trim();
+
+                if (!essayText) {
+                    showMessage('error', '英作文を入力してください。');
+                    return;
+                }
+
+                resultsDiv.classList.add('hidden');
+                resultsDiv.classList.remove('results-fade-in');
+                errorMessage.classList.add('hidden');
+                loadingIndicator.classList.remove('hidden');
+                overallGradeArea.innerHTML = '';
+                detailedGradeArea.innerHTML = '';
+                feedbackArea.innerHTML = '';
+
+                try {
+                    // Build the grading instructions based on enabled items
+                    let gradingInstructions = "以下の英文を添削し、詳細な評価とフィードバックを提供してください。\n";
+                    gradingInstructions += "評価は以下の項目についてA+, A, B, C, D, E, Fのいずれかで採点し、その後に各評価項目（文法、語彙、構成、内容、スペル・表記、総合）ごとに詳細な講評（良かった点、改善すべき点、間違っている点、あなたへのアドバイス）を日本語でJSON形式で出力してください。\n"; // Updated label here
+                    gradingInstructions += "A+ は完璧で、直すところがないような最高の評価です。F は一番低い評価で、0点に近い低い点数になります。\n\n";
+                    gradingInstructions += "評価項目と詳細フィードバックの要件:\n";
+                    gradingInstructions += "- 各項目（文法、語彙、構成、内容、スペル・表記、総合）に対して、それぞれ以下の4つのサブ項目で講評を記載してください。\n";
+                    gradingInstructions += "    - 良かった点（good_points）: その項目で評価できる点\n"; // Updated label here
+                    gradingInstructions += "    - 改善すべき点（improvements）: 全体的に見て改善の余地がある点\n";
+                    gradingInstructions += "    - 間違っている点（mistakes）: 明らかな誤りや修正が必要な点\n";
+                    gradingInstructions += "    - あなたへのアドバイス（suggestions）: さらに質を高めるための具体的な提案\n\n"; // Updated label here
+
+                    // Specific instruction for grammar mistake details, including "reason"
+                    gradingInstructions += "文法のフィードバックでは、'mistake_details' という配列に、個々の間違いについて 'error' (間違っている箇所), 'reason' (間違いの理由), 'correction_example' (改善例) を含めて、箇条書きの表形式で表示できるようにしてください。表の列順は、間違っている点、改善例、理由の順にしてください。\n\n"; // Updated instruction for order
+
+
+                    const enabledGradingItems = [];
+                    const itemDescriptions = {
+                        grammar: "文法（Grammar）: 主語と動詞の一致、時制の一致、前置詞や冠詞の使い方、句読点の正確な使用",
+                        vocabulary: "語彙（Vocabulary）: 適切な単語選び、同じ単語の繰り返しを避ける工夫、より自然な言い回しの提案",
+                        structure: "構成（Structure / Organization）: 段落ごとの役割が明確か、論理的なつながりがあるか（接続詞やトランジションの使用）、導入・本論・結論がはっきりしているか",
+                        content: "内容（Content）: 設問に正確に答えているか、アイデアに独自性や具体性があるか、読み手に伝わる明確なメッセージがあるか",
+                        spelling: "スペル・表記（Spelling & Formatting）: 綴りミスがないか（特に同音異義語）、アメリカ英語かイギリス英語かを統一しているか、適切に改行やインデントがされているか",
+                    };
+
+                    for (const key in currentGradingConfig) {
+                        if (currentGradingConfig[key]) {
+                            enabledGradingItems.push(itemDescriptions[key]);
+                        }
+                    }
+
+                    if (enabledGradingItems.length > 0) {
+                        gradingInstructions += "評価は総合（Overall）を含め、以下の項目に焦点を当ててください:\n" + enabledGradingItems.map((item, index) => `${index + 1}. ${item}`).join('\n') + "\n\n";
+                    } else {
+                        gradingInstructions += "評価は総合（Overall）について行ってください。\n\n";
+                    }
+
+                    let finalPrompt = `${gradingInstructions}英文:\n${essayText}\n`;
+
+                    if (currentCustomPrompt) {
+                        finalPrompt += `\nユーザーからの追加指示: ${currentCustomPrompt}`;
+                    }
+
+                    let chatHistory = [];
+                    chatHistory.push({ role: "user", parts: [{ text: finalPrompt }] });
+                    const payload = {
+                        contents: chatHistory,
+                        generationConfig: {
+                            responseMimeType: "application/json",
+                            responseSchema: {
+                                type: "OBJECT",
+                                properties: {
+                                    "overall_grade": { "type": "STRING", "enum": ["A+", "A", "B", "C", "D", "E", "F"] },
+                                    "grammar_grade": { "type": "STRING", "enum": ["A+", "A", "B", "C", "D", "E", "F"] },
+                                    "vocabulary_grade": { "type": "STRING", "enum": ["A+", "A", "B", "C", "D", "E", "F"] },
+                                    "structure_grade": { "type": "STRING", "enum": ["A+", "A", "B", "C", "D", "E", "F"] },
+                                    "content_grade": { "type": "STRING", "enum": ["A+", "A", "B", "C", "D", "E", "F"] },
+                                    "spelling_grade": { "type": "STRING", "enum": ["A+", "A", "B", "C", "D", "E", "F"] },
+                                    "detailed_feedback": {
+                                        "type": "OBJECT",
+                                        "properties": {
+                                            "overall": {
+                                                "type": "OBJECT",
+                                                "properties": {
+                                                    "good_points": { "type": "STRING" },
+                                                    "improvements": { "type": "STRING" },
+                                                    "mistakes": { "type": "STRING" },
+                                                    "suggestions": { "type": "STRING" }
+                                                },
+                                                "propertyOrdering": ["good_points", "improvements", "mistakes", "suggestions"]
+                                            },
+                                            "grammar": {
+                                                "type": "OBJECT",
+                                                "properties": {
+                                                    "good_points": { "type": "STRING" },
+                                                    "mistake_details": { // New field for grammar specific structured feedback
+                                                        "type": "ARRAY",
+                                                        "items": {
+                                                            "type": "OBJECT",
+                                                            "properties": {
+                                                                "error": { "type": "STRING" },
+                                                                "reason": { "type": "STRING" }, // Added 'reason' field
+                                                                "correction_example": { "type": "STRING" }
+                                                            },
+                                                            "propertyOrdering": ["error", "correction_example", "reason"] // Order updated for JSON response
+                                                        }
+                                                    },
+                                                    "improvements": { "type": "STRING" },
+                                                    "mistakes": { "type": "STRING" },
+                                                    "suggestions": { "type": "STRING" }
+                                                },
+                                                "propertyOrdering": ["good_points", "mistake_details", "improvements", "mistakes", "suggestions"]
+                                            },
+                                            "vocabulary": {
+                                                "type": "OBJECT",
+                                                "properties": {
+                                                    "good_points": { "type": "STRING" },
+                                                    "improvements": { "type": "STRING" },
+                                                    "mistakes": { "type": "STRING" },
+                                                    "suggestions": { "type": "STRING" }
+                                                },
+                                                "propertyOrdering": ["good_points", "improvements", "mistakes", "suggestions"]
+                                            },
+                                            "structure": {
+                                                "type": "OBJECT",
+                                                "properties": {
+                                                    "good_points": { "type": "STRING" },
+                                                    "improvements": { "type": "STRING" },
+                                                    "mistakes": { "type": "STRING" },
+                                                    "suggestions": { "type": "STRING" }
+                                                },
+                                                "propertyOrdering": ["good_points", "improvements", "mistakes", "suggestions"]
+                                            },
+                                            "content": {
+                                                "type": "OBJECT",
+                                                "properties": {
+                                                    "good_points": { "type": "STRING" },
+                                                    "improvements": { "type": "STRING" },
+                                                    "mistakes": { "type": "STRING" },
+                                                    "suggestions": { "type": "STRING" }
+                                                },
+                                                "propertyOrdering": ["good_points", "improvements", "mistakes", "suggestions"]
+                                            },
+                                            "spelling": {
+                                                "type": "OBJECT",
+                                                "properties": {
+                                                    "good_points": { "type": "STRING" },
+                                                    "improvements": { "type": "STRING" },
+                                                    "mistakes": { "type": "STRING" },
+                                                    "suggestions": { "type": "STRING" }
+                                                },
+                                                "propertyOrdering": ["good_points", "improvements", "mistakes", "suggestions"]
+                                            }
+                                        },
+                                        "propertyOrdering": ["overall", "grammar", "vocabulary", "structure", "content", "spelling"]
+                                    }
+                                },
+                                "propertyOrdering": ["overall_grade", "grammar_grade", "vocabulary_grade", "structure_grade", "content_grade", "spelling_grade", "detailed_feedback"]
+                            }
+                        }
+                    };
+
+                    // === Gemini API Key Setting Start ===
+                    // Gemini APIキーをここに設定してください。
+                    // 外部デプロイ時には、環境変数などを用いて安全に管理することを強く推奨します。
+                    const apiKey = ""; // 例: "YOUR_GEMINI_API_KEY_HERE";
+                    // === Gemini API Key Setting End ===
+
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(`APIエラー: ${response.status} ${response.statusText} - ${JSON.stringify(errorData)}`);
+                    }
+
+                    const result = await response.json();
+                    let parsedJson;
+
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const jsonString = result.candidates[0].content.parts[0].text;
+                        parsedJson = JSON.parse(jsonString);
+                    } else {
+                        throw new Error('APIからの応答が予期しない形式です。');
+                    }
+
+                    // Display overall grade
+                    overallGradeArea.innerHTML = createGradeItem('総合', parsedJson.overall_grade, 'feedback-overall', true);
+
+                    // Display detailed grades
+                    detailedGradeArea.innerHTML = '';
+                    const gradingItemOrder = ['grammar', 'vocabulary', 'structure', 'content', 'spelling'];
+                    gradingItemOrder.forEach(item => {
+                        if (currentGradingConfig[item]) {
+                            const labelMap = {
+                                grammar: '文法',
+                                vocabulary: '語彙',
+                                structure: '構成',
+                                content: '内容',
+                                spelling: 'スペル・表記'
+                            };
+                            detailedGradeArea.innerHTML += createGradeItem(labelMap[item], parsedJson[`${item}_grade`], `feedback-${item}`);
+                        }
+                    });
+
+                    // Display detailed feedback for each category
+                    const feedback = parsedJson.detailed_feedback;
+                    feedbackArea.innerHTML =
+                        createFeedbackSection('feedback-overall', '総合', feedback.overall.good_points, feedback.overall.improvements, feedback.overall.mistakes, feedback.overall.suggestions);
+
+                    gradingItemOrder.forEach(item => {
+                        if (currentGradingConfig[item]) {
+                             const labelMap = {
+                                grammar: '文法',
+                                vocabulary: '語彙',
+                                structure: '構成',
+                                content: '内容',
+                                spelling: 'スペル・表記'
+                            };
+                            // Pass grammarMistakeDetails for grammar section
+                            const grammarMistakeDetails = (item === 'grammar' && feedback.grammar && Array.isArray(feedback.grammar.mistake_details)) ? feedback.grammar.mistake_details : null;
+                            
+                            feedbackArea.innerHTML += createFeedbackSection(
+                                `feedback-${item}`,
+                                labelMap[item],
+                                feedback[item].good_points,
+                                feedback[item].improvements,
+                                feedback[item].mistakes,
+                                feedback[item].suggestions,
+                                grammarMistakeDetails // Pass structured details for grammar
+                            );
+                        }
+                    });
+
+                    resultsDiv.classList.remove('hidden');
+                    resultsDiv.classList.add('results-fade-in');
+
+                    document.querySelectorAll('.grade-item').forEach(item => {
+                        item.addEventListener('click', () => {
+                            const targetId = item.dataset.target;
+                            if (targetId) {
+                                const targetElement = document.getElementById(targetId);
+                                if (targetElement) {
+                                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                }
+                            }
+                        });
+                    });
+
+                } catch (error) {
+                    console.error('添削エラー:', error);
+                    showMessage('error', `添削中にエラーが発生しました: ${error.message}`);
+                    resultsDiv.classList.add('hidden');
+                } finally {
+                    loadingIndicator.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
