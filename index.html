@@ -1498,14 +1498,8 @@
                         }
                     };
 
-                    // === Gemini API Key Setting Start ===
-                    // Gemini APIキーをここに設定してください。
-                    // 外部デプロイ時には、環境変数などを用いて安全に管理することを強く推奨します。
-                    const apiKey = "AIzaSyDs9OB6HwwvuOjH6CC8TSzRGCSWZxwsQNc"; // 例: "YOUR_GEMINI_API_KEY_HERE";
-                    // === Gemini API Key End ===
-
+                    const apiKey = "AIzaSyDs9OB6HwwvuOjH6CC8TSzRGCSWZxwsQNc";
                     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
                     const response = await fetch(apiUrl, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
