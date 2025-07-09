@@ -1360,7 +1360,7 @@
                 feedbackArea.innerHTML = '';
 
                 try {
-                    let gradingInstructions = "以下の英文を添削し、詳細な評価とフィードバックを提供してください。\n";
+                    let gradingInstructions = "以下の英文を添削し、詳細な評価とフィードバックを日本語で提供してください。\n";
                     gradingInstructions += "評価は以下の項目についてA+, A, B, C, D, E, Fのいずれかで採点し、その後に各評価項目（文法、語彙、構成、内容、スペル・表記、総合）ごとに詳細な講評（良かった点、改善すべき点、間違っている点、あなたへのアドバイス）を日本語でJSON形式で出力してください。\n";
                     gradingInstructions += "A+ は完璧で、直すところがないような最高の評価です。F は一番低い評価で、0点に近い低い点数になります。\n\n";
                     gradingInstructions += "評価項目と詳細フィードバックの要件:\n";
@@ -1370,7 +1370,7 @@
                     gradingInstructions += "    - 間違っている点（mistakes）: 明らかな誤りや修正が必要な点\n";
                     gradingInstructions += "    - あなたへのアドバイス（suggestions）: さらに質を高めるための具体的な提案\n\n";
 
-                    gradingInstructions += "文法のフィードバックでは、'mistake_details' という配列に、個々の間違いについて 'error' (間違っている箇所), 'reason' (間違いの理由), 'correction_example' (改善例) を含めて、箇条書きの表形式で表示できるようにしてください。表の列順は、間違っている点、改善例、理由の順にしてください。\n\n";
+                    gradingInstructions += "文法のフィードバックでは、'mistake_details' という配列に、個々の間違いについて 'error' (間違っている箇所), 'reason' (間違いの理由), 'correction_example' (改善例) を含めて、箇条書きの表形式で表示できるようにしてください。表の列順は、間違っている点、改善例、理由の順にしてください。文法の間違いは多くなってもよいので、すべて指摘してください。\n\n";
 
                     const enabledGradingItems = [];
                     const itemDescriptions = {
